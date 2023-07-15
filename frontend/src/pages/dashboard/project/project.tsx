@@ -17,11 +17,11 @@ import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 // sections
 import { BlogPostCard } from '../../../sections/@dashboard/blog';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjects } from 'src/store/action/products.action';
+import { fetchAllDashboardData, fetchProjects } from 'src/store/action/products.action';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
 import { AppAreaInstalled } from 'src/sections/@dashboard/general/app';
-import { getLast15Days } from 'src/utils/formatTime';
+import { statusCounts } from 'src/utils/formatProject';
 
 BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
@@ -29,12 +29,15 @@ BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function BlogPosts() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { projects } = useSelector((state: RootState) => state.projects);
+  const { projects, dashboardData } = useSelector((state: RootState) => state.projects);
 
   const { themeStretch } = useSettings();
 
+  const project = dashboardData && dashboardData.length >= 1 && statusCounts(dashboardData);
+
   useEffect(() => {
     dispatch(fetchProjects());
+    dispatch(fetchAllDashboardData());
   }, []);
 
   return (
@@ -84,20 +87,50 @@ export default function BlogPosts() {
           <AppAreaInstalled
             title="Area Installed"
             subheader="(+43%) than last year"
-            chartLabels={getLast15Days()}
+            chartLabels={
+              project &&
+              project.length >= 1 &&
+              project.map((i: { projectName: string }) => i.projectName)
+            }
             chartData={[
               {
                 year: '2019',
                 data: [
-                  { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                  { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
+                  {
+                    name: 'paid',
+                    data:
+                      project &&
+                      project.length >= 1 &&
+                      project?.map((i: { statusCount: number[] }) => i?.statusCount[0]),
+                  },
+                  {
+                    name: 'unpaid',
+                    data:
+                      project &&
+                      project.length >= 1 &&
+                      project?.map((i: { statusCount: number[] }) => i?.statusCount[1]),
+                  },
+                  {
+                    name: 'overdue',
+                    data:
+                      project &&
+                      project.length >= 1 &&
+                      project?.map((i: { statusCount: number[] }) => i?.statusCount[2]),
+                  },
+                  {
+                    name: 'draft',
+                    data:
+                      project &&
+                      project.length >= 1 &&
+                      project?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
+                  },
                 ],
               },
               {
                 year: '2020',
                 data: [
-                  { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                  { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
+                  { name: 'paid', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
+                  { name: 'unpaid', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
                 ],
               },
             ]}

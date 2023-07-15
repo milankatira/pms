@@ -83,7 +83,7 @@ export default function AppAreaInstalled({
       {chartData.map((item) => (
         <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
           {item.year === seriesData && (
-            <ReactApexChart type="line" series={item.data} options={chartOptions} height={364} />
+            <ReactApexChart type="area" series={item.data} options={chartOptions} height={450} />
           )}
         </Box>
       ))}

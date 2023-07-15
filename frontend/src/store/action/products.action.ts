@@ -1,4 +1,4 @@
-import axiosInstance from "src/utils/axios";
+import axiosInstance from 'src/utils/axios';
 
 // Action Types
 export const FETCH_PROJECTS_REQUEST = 'FETCH_PROJECTS_REQUEST';
@@ -20,6 +20,10 @@ export const GET_PROJECT_FAILURE = 'GET_PROJECT_FAILURE';
 export const FETCH_ALL_PROJECTS_REQUEST = 'FETCH_ALL_PROJECTS_REQUEST';
 export const FETCH_ALL_PROJECTS_SUCCESS = 'FETCH_ALL_PROJECTS_SUCCESS';
 export const FETCH_ALL_PROJECTS_FAILURE = 'FETCH_ALL_PROJECTS_FAILURE';
+
+export const FETCH_ALL_DASHBOARD_DATA_REQUEST = 'FETCH_ALL_DASHBOARD_DATA_REQUEST';
+export const FETCH_ALL_DASHBOARD_DATA_SUCCESS = 'FETCH_ALL_DASHBOARD_DATA_SUCCESS';
+export const FETCH_ALL_DASHBOARD_DATA_FAILURE = 'FETCH_ALL_DASHBOARD_DATA_FAILURE';
 
 // Action Creators
 export const fetchProjectsRequest = () => ({ type: FETCH_PROJECTS_REQUEST });
@@ -81,6 +85,20 @@ export const fetchAllProjectsFailure = (error: string) => ({
   payload: error,
 });
 
+export const fetchAllDashboardDataRequest = () => ({
+  type: FETCH_ALL_DASHBOARD_DATA_REQUEST,
+});
+
+export const fetchAllDashboardDataSuccess = (dashboardData: any[]) => ({
+  type: FETCH_ALL_DASHBOARD_DATA_SUCCESS,
+  payload: dashboardData,
+});
+
+export const fetchAllDashboardDataFailure = (error: string) => ({
+  type: FETCH_ALL_DASHBOARD_DATA_FAILURE,
+  payload: error,
+});
+
 export const fetchAllProjects = () => async (dispatch: any) => {
   try {
     dispatch(fetchAllProjectsRequest());
@@ -133,5 +151,17 @@ export const getProject = (projectId: string) => async (dispatch: any) => {
     dispatch(getProjectSuccess(response.data));
   } catch (error) {
     dispatch(getProjectFailure(error.message));
+  }
+};
+
+export const fetchAllDashboardData = () => async (dispatch: any) => {
+  try {
+    dispatch(fetchAllDashboardDataRequest());
+
+    const response = await axiosInstance.get('/projects/dashboard/all'); // Update with the correct API endpoint for fetching all dashboard data
+
+    dispatch(fetchAllDashboardDataSuccess(response.data.project));
+  } catch (error) {
+    dispatch(fetchAllDashboardDataFailure(error.message));
   }
 };

@@ -29,18 +29,18 @@ export function fToNow(date: Date | string | number) {
 }
 
 export function getLast15Days() {
-  var dates = [];
-  var today = new Date();
+  const dates = [];
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  for (var i = 14; i >= 0; i--) {
-    var date = new Date(today);
+  for (let i = 14; i >= 0; i--) {
+    const date = new Date(today);
     date.setDate(today.getDate() - i);
 
-    var day = date.getDate().toString().padStart(2, '0');
-    var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
 
-    var formattedDate = day + '/' + month;
+    const formattedDate = day + '/' + month;
     dates.push(formattedDate);
   }
 
