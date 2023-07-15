@@ -15,8 +15,6 @@ import { Link } from '@mui/material';
 type Props = {
   post: {
     _id: number;
-    name: string;
-    description: string;
     status: string;
     projectId: number;
     duration: number;
@@ -35,7 +33,6 @@ export default function BlogPostCard({ post, index }: Props) {
   return (
     <Card className={style.card}>
       <div className={style.name__container}>
-        <p>{post.name}</p>
         <TableCell align="left">
           <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -52,7 +49,6 @@ export default function BlogPostCard({ post, index }: Props) {
         </TableCell>
       </div>
       <Typography className={style.bold}>description</Typography>
-      <p>{post.description}</p>
       <div className={style.name__container}>
         <Typography className={style.bold}>starting date</Typography>
 

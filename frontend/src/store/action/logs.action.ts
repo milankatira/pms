@@ -4,6 +4,7 @@ import axiosInstance from 'src/utils/axios';
 export const FETCH_LOGS_REQUEST = 'FETCH_LOGS_REQUEST';
 export const FETCH_LOGS_SUCCESS = 'FETCH_LOGS_SUCCESS';
 export const FETCH_LOGS_FAILURE = 'FETCH_LOGS_FAILURE';
+
 export const CREATE_LOG_REQUEST = 'CREATE_LOG_REQUEST';
 export const CREATE_LOG_SUCCESS = 'CREATE_LOG_SUCCESS';
 export const CREATE_LOG_FAILURE = 'CREATE_LOG_FAILURE';
@@ -11,9 +12,14 @@ export const CREATE_LOG_FAILURE = 'CREATE_LOG_FAILURE';
 export const EDIT_LOG_REQUEST = 'EDIT_LOG_REQUEST';
 export const EDIT_LOG_SUCCESS = 'EDIT_LOG_SUCCESS';
 export const EDIT_LOG_FAILURE = 'EDIT_LOG_FAILURE';
+
 export const GET_LOG_REQUEST = 'GET_LOG_REQUEST';
 export const GET_LOG_SUCCESS = 'GET_LOG_SUCCESS';
 export const GET_LOG_FAILURE = 'GET_LOG_FAILURE';
+
+export const FETCH_DASHBOARD_LOGS_REQUEST = 'FETCH_DASHBOARD_LOGS_REQUEST';
+export const FETCH_DASHBOARD_LOGS_SUCCESS = 'FETCH_DASHBOARD_LOGS_SUCCESS';
+export const FETCH_DASHBOARD_LOGS_FAILURE = 'FETCH_DASHBOARD_LOGS_FAILURE';
 
 // Action Creators
 export const fetchLogsRequest = () => ({ type: FETCH_LOGS_REQUEST });
@@ -63,7 +69,32 @@ export const getLogFailure = (error: string) => ({
   payload: error,
 });
 
+export const fetchDashboardLogsRequest = () => ({ type: FETCH_DASHBOARD_LOGS_REQUEST });
+
+export const fetchDashboardLogsSuccess = (logs: any[]) => ({
+  type: FETCH_DASHBOARD_LOGS_SUCCESS,
+  payload: logs,
+});
+
+export const fetchDashboardLogsFailure = (error: string) => ({
+  type: FETCH_DASHBOARD_LOGS_FAILURE,
+  payload: error,
+});
+
 // Thunk Action Creator
+
+export const fetchDashboardLogs = () => async (dispatch: any) => {
+  try {
+    dispatch(fetchDashboardLogsRequest());
+
+    const response = await axiosInstance.get('/logs/dashboard/all'); // Update with your API endpoint
+
+    dispatch(fetchDashboardLogsSuccess(response.data.statusCounts));
+  } catch (error) {
+    dispatch(fetchDashboardLogsFailure(error.message));
+  }
+};
+
 export const fetchLogs = () => async (dispatch: any) => {
   try {
     dispatch(fetchLogsRequest());

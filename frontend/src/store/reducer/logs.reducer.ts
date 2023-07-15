@@ -11,6 +11,9 @@ import {
   GET_LOG_REQUEST,
   GET_LOG_SUCCESS,
   GET_LOG_FAILURE,
+  FETCH_DASHBOARD_LOGS_REQUEST,
+  FETCH_DASHBOARD_LOGS_SUCCESS,
+  FETCH_DASHBOARD_LOGS_FAILURE,
 } from '../action/logs.action';
 
 const initialState = {
@@ -18,6 +21,7 @@ const initialState = {
   loading: false,
   error: null,
   log: null,
+  dashboardLogs: [],
 };
 
 const logReducer = (state = initialState, action: any) => {
@@ -44,7 +48,6 @@ const logReducer = (state = initialState, action: any) => {
         loading: false,
       };
     case GET_LOG_SUCCESS:
-      console.log(action.payload, 'action.payload');
       return {
         ...state,
         loading: false,
@@ -54,6 +57,24 @@ const logReducer = (state = initialState, action: any) => {
     case CREATE_LOG_FAILURE:
     case EDIT_LOG_FAILURE:
     case GET_LOG_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case FETCH_DASHBOARD_LOGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FETCH_DASHBOARD_LOGS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        dashboardLogs: action.payload,
+      };
+    case FETCH_DASHBOARD_LOGS_FAILURE:
       return {
         ...state,
         loading: false,

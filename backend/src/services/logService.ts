@@ -1,6 +1,10 @@
 import Log, { ILog } from "../models/log";
-import project, { IProject } from "../models/project";
+import { IProject } from "../models/project";
 import { IUser } from "../models/user";
+
+// Get the date 15 days ago
+const fifteenDaysAgo = new Date();
+fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
 export const logService = {
   async createLog(
@@ -45,4 +49,67 @@ export const logService = {
     return log;
   },
 
+  async getLogsPerDay(
+    startDate = fifteenDaysAgo,
+    endDate = new Date()
+  ): Promise<any[]> {
+    const result = await Log.aggregate([
+      {
+        $match: {
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]).exec();
+    return result;
+  },
+
+  async getStatusCounts(
+    startDate = fifteenDaysAgo,
+    endDate = new Date()
+  ): Promise<any[]> {
+    const result = await Log.aggregate([
+      {
+        $match: {
+          date: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            date: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+            status: "$status",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.date",
+          statuses: {
+            $push: {
+              status: "$_id.status",
+              count: "$count",
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]).exec();
+    return result;
+  },
 };

@@ -85,8 +85,7 @@ export default function BlogPosts() {
         <br />
         <Grid item xs={12} md={6} lg={8}>
           <AppAreaInstalled
-            title="Area Installed"
-            subheader="(+43%) than last year"
+            title="Project log"
             chartLabels={
               project &&
               project.length >= 1 &&

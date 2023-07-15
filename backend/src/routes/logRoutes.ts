@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post("/", logController.createLog);
 router.get("/", Auth, logController.getAllLogs);
+router.get("/dashboard/all", Auth, logController.getStatusCounts);
 router.get("/:id", Auth, logController.getLog);
 router.put("/:id", Auth, logController.editLog);
 

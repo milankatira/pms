@@ -5,15 +5,15 @@ export const logController = {
   async createLog(req: any, res: Response): Promise<void> {
     try {
       const { projectId, status, duration, date, note } = req.body;
-      const user = req.user.userId;
+      const userId = req.user.userId;
 
-      if (!user) {
+      if (!userId) {
         res.status(404).json({ error: "User not found" });
         return;
       }
 
       const log = await logService.createLog(
-        user,
+        userId,
         projectId,
         status,
         duration,
@@ -91,4 +91,33 @@ export const logController = {
     }
   },
 
+  async getLogsByDateRange(req: Request, res: Response): Promise<void> {
+    try {
+      const { startDate, endDate } = req.query;
+
+      if (!startDate || !endDate) {
+        res.status(400).json({ error: "Invalid date range" });
+        return;
+      }
+
+      const logs = await logService.getLogsPerDay();
+
+      res.status(200).json({ logs });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async getStatusCounts(req: Request, res: Response): Promise<void> {
+    try {
+
+      const statusCounts = await logService.getStatusCounts();
+
+      res.status(200).json({ statusCounts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };
