@@ -14,12 +14,15 @@ import { Link } from '@mui/material';
 
 type Props = {
   post: {
+    _id: number;
     name: string;
     description: string;
-    createdAt: Date;
     status: string;
-    logCount: number;
-    _id: number;
+    projectId: number;
+    duration: number;
+    note: string;
+    date: Date;
+
   };
   index?: number;
 };
@@ -53,7 +56,7 @@ export default function BlogPostCard({ post, index }: Props) {
       <div className={style.name__container}>
         <Typography className={style.bold}>starting date</Typography>
 
-        <p>{fDate(post?.createdAt)}</p>
+        <p>{fDate(post?.date)}</p>
       </div>
 
       <br />

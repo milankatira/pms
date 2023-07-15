@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 // next
 import { useRouter } from 'next/router';
@@ -7,30 +7,21 @@ import { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import {
-  Grid,
-  Card,
-  Stack,
-  Button,
-  MenuItem,
-} from '@mui/material';
+import { DatePicker, LoadingButton } from '@mui/lab';
+import { Grid, Card, Stack, Button, MenuItem } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 
-import {
-  FormProvider,
-  RHFTextField,
-  RHFSelect,
-} from '../../../components/hook-form';
+import { FormProvider, RHFTextField, RHFSelect, RHFEditor } from '../../../components/hook-form';
 
 import BlogNewPostPreview from './BlogNewPostPreview';
 
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
-import { createProject } from 'src/store/action/products.action';
-
+import { createProject, fetchAllProjects } from 'src/store/action/products.action';
+import { useSelector } from 'react-redux';
+import { createLog } from 'src/store/action/logs.action';
 
 export type FormValuesProps = {
   name: string;
@@ -41,12 +32,15 @@ export type FormValuesProps = {
 export default function BlogNewPostForm() {
   const { push } = useRouter();
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
+  const { projectList } = useSelector((state: RootState) => state.projects);
 
-  const STATUS_OPTIONS = ['paid', 'unpaid', 'overdue', 'draft'];
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, []);
+
+  const DURATION_OPTIONS = [30, 120, 240, 480, 960];
 
   const [open, setOpen] = useState(false);
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleOpenPreview = () => {
     setOpen(true);
@@ -57,14 +51,17 @@ export default function BlogNewPostForm() {
   };
 
   const NewBlogSchema = Yup.object().shape({
-    name: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
+    projectId: Yup.string().required('project is required'),
+    date: Yup.string().required('date is required'),
+    status: Yup.string().required('date is required'),
   });
 
   const defaultValues = {
-    name: '',
-    description: '',
-    status: 'paid',
+    projectId: '',
+    duration: 30,
+    note: '',
+    date: '',
+    status: '',
   };
 
   const methods = useForm<FormValuesProps>({
@@ -75,19 +72,22 @@ export default function BlogNewPostForm() {
   const {
     watch,
     handleSubmit,
-    formState: { isSubmitting},
+    formState: { isSubmitting },
   } = methods;
 
   const values = watch();
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      dispatch(createProject(data));
-      push(PATH_DASHBOARD.blog.posts);
+      console.log(data, 'data');
+      dispatch(createLog(data));
+      push(PATH_DASHBOARD.logs.posts);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const STATUS_OPTIONS = ['paid', 'unpaid', 'overdue', 'draft'];
 
   return (
     <>
@@ -96,18 +96,63 @@ export default function BlogNewPostForm() {
           <Grid item xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <RHFTextField name="name" label="Post Title" />
+                <RHFSelect
+                  fullWidth
+                  name="projectId"
+                  label="projectId"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  {projectList &&
+                    projectList.map((option: { _id: number; name: string }) => (
+                      <MenuItem
+                        key={option._id}
+                        value={option._id}
+                        sx={{
+                          mx: 1,
+                          my: 0.5,
+                          borderRadius: 0.75,
+                          typography: 'body2',
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                </RHFSelect>
 
-                <RHFTextField name="description" label="Description" multiline rows={3} />
+                <RHFSelect
+                  fullWidth
+                  name="duration"
+                  label="duration"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  {DURATION_OPTIONS.map((option: number) => (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                      sx={{
+                        mx: 1,
+                        my: 0.5,
+                        borderRadius: 0.75,
+                        typography: 'body2',
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {option} min
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
 
                 <RHFSelect
                   fullWidth
                   name="status"
-                  label="Status"
+                  label="status"
                   InputLabelProps={{ shrink: true }}
                   SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
                 >
-                  {STATUS_OPTIONS.map((option) => (
+                  {STATUS_OPTIONS.map((option: string) => (
                     <MenuItem
                       key={option}
                       value={option}
@@ -123,6 +168,8 @@ export default function BlogNewPostForm() {
                     </MenuItem>
                   ))}
                 </RHFSelect>
+                <RHFEditor simple name="note" />
+                <RHFTextField name="date" type="date" />
               </Stack>
             </Card>
           </Grid>

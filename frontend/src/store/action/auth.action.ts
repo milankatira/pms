@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import axios from '../../utils/axios';
+import { PATH_DASHBOARD } from 'src/routes/paths';
 
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -28,7 +29,7 @@ export const login =
       localStorage.setItem('token', res.data.token);
       dispatch({ type: LOGIN_SUCCESS });
       // Router.push("/")
-      router.push('/');
+      router.push(PATH_DASHBOARD.blog.root);
       // You can perform additional actions after a successful login, such as storing the token in local storage or redirecting the user.
     } catch (error) {
       dispatch({ type: AUTH_ERROR, payload: error?.response?.data?.error });

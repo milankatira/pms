@@ -22,24 +22,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { dispatch } from 'src/redux/store';
 import { useRouter } from 'next/router';
 import { PATH_DASHBOARD } from 'src/routes/paths';
-import { editProject } from 'src/store/action/products.action';
+import { editProject, fetchAllProjects } from 'src/store/action/products.action';
 import { Card } from '@mui/material';
-import { RHFSelect, RHFTextField, FormProvider } from 'src/components/hook-form';
+import { RHFSelect, RHFTextField, FormProvider, RHFEditor } from 'src/components/hook-form';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store/reducer';
+import { editLog, fetchLogs, getLog } from 'src/store/action/logs.action';
+import { fDate, fInputDate } from '../../../utils/formatTime';
 
 type Props = {
   posts: {
+    _id: number;
     name: string;
     description: string;
-    createdAt: Date;
     status: string;
-    logCount: number;
-    _id: number;
+    projectId: number;
+    duration: number;
+    note: string;
+    date: Date;
   };
 };
 
 export default function BlogPostRecent({ posts }: Props) {
+  const { log } = useSelector((state: RootState) => state.logs?.log);
+  console.log(log, ' ========  log =====-----=====');
   const { push } = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -66,23 +74,28 @@ export default function BlogPostRecent({ posts }: Props) {
   }, [open]);
 
   type FormValuesProps = {
-    name: string;
-    description: string;
-    status: string;
+    status?: string;
+    projectId?: number;
+    duration?: number;
+    note?: string;
+    date?: Date;
   };
 
   const NewBlogSchema = Yup.object().shape({
-    name: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
+    projectId: Yup.string().required('project is required'),
+    date: Yup.string().required('date is required'),
+    status: Yup.string().required('date is required'),
   });
 
   const defaultValues = {
-    name: posts.name,
-    description: posts.description,
-    status: posts.status,
+    status: log.status,
+    projectId: log.projectId,
+    duration: log.duration,
+    note: log.note,
+    date: fInputDate(new Date(log.date)),
   };
 
-  const methods = useForm<FormValuesProps>({
+  const methods = useForm({
     resolver: yupResolver(NewBlogSchema),
     defaultValues,
   });
@@ -96,9 +109,8 @@ export default function BlogPostRecent({ posts }: Props) {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      console.log('hello');
-      dispatch(editProject(posts._id as unknown as string, data));
-      push(PATH_DASHBOARD.blog.posts);
+      dispatch(editLog(posts._id as unknown as string, data));
+      push(PATH_DASHBOARD.logs.posts);
       handleClose();
     } catch (error) {
       console.error(error);
@@ -106,6 +118,10 @@ export default function BlogPostRecent({ posts }: Props) {
   };
 
   const STATUS_OPTIONS = ['paid', 'unpaid', 'overdue', 'draft'];
+  const DURATION_OPTIONS = [30, 120, 240, 480, 960];
+
+  const { projectList } = useSelector((state: RootState) => state.projects);
+  console.log(projectList, 'projectList', posts);
 
   return (
     <>
@@ -124,21 +140,67 @@ export default function BlogPostRecent({ posts }: Props) {
 
         <Dialog open={open} onClose={handleClose} scroll={scroll} fullWidth>
           <DialogTitle sx={{ pb: 2 }}>Subscribe</DialogTitle>
+          {/* @ts-ignore */}
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <DialogContent dividers={scroll === 'paper'}>
               <Stack spacing={3}>
-                <RHFTextField name="name" label="Post Title" />
+                <RHFSelect
+                  fullWidth
+                  name="projectId"
+                  label="project"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  {projectList &&
+                    projectList.map((option: { _id: number; name: string }) => (
+                      <MenuItem
+                        key={option._id}
+                        value={option._id}
+                        sx={{
+                          mx: 1,
+                          my: 0.5,
+                          borderRadius: 0.75,
+                          typography: 'body2',
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                </RHFSelect>
 
-                <RHFTextField name="description" label="Description" multiline rows={3} />
+                <RHFSelect
+                  fullWidth
+                  name="duration"
+                  label="duration"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  {DURATION_OPTIONS.map((option: number) => (
+                    <MenuItem
+                      key={option}
+                      value={option}
+                      sx={{
+                        mx: 1,
+                        my: 0.5,
+                        borderRadius: 0.75,
+                        typography: 'body2',
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {option} min
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
 
                 <RHFSelect
                   fullWidth
                   name="status"
-                  label="Status"
+                  label="status"
                   InputLabelProps={{ shrink: true }}
                   SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
                 >
-                  {STATUS_OPTIONS.map((option) => (
+                  {STATUS_OPTIONS.map((option: string) => (
                     <MenuItem
                       key={option}
                       value={option}
@@ -154,6 +216,8 @@ export default function BlogPostRecent({ posts }: Props) {
                     </MenuItem>
                   ))}
                 </RHFSelect>
+                <RHFEditor simple name="note" />
+                <RHFTextField name="date" type="date" />
               </Stack>
             </DialogContent>
             <DialogActions>

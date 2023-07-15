@@ -4,6 +4,7 @@ import axiosInstance from "src/utils/axios";
 export const FETCH_PROJECTS_REQUEST = 'FETCH_PROJECTS_REQUEST';
 export const FETCH_PROJECTS_SUCCESS = 'FETCH_PROJECTS_SUCCESS';
 export const FETCH_PROJECTS_FAILURE = 'FETCH_PROJECTS_FAILURE';
+
 export const CREATE_PROJECT_REQUEST = 'CREATE_PROJECT_REQUEST';
 export const CREATE_PROJECT_SUCCESS = 'CREATE_PROJECT_SUCCESS';
 export const CREATE_PROJECT_FAILURE = 'CREATE_PROJECT_FAILURE';
@@ -11,9 +12,14 @@ export const CREATE_PROJECT_FAILURE = 'CREATE_PROJECT_FAILURE';
 export const EDIT_PROJECT_REQUEST = 'EDIT_PROJECT_REQUEST';
 export const EDIT_PROJECT_SUCCESS = 'EDIT_PROJECT_SUCCESS';
 export const EDIT_PROJECT_FAILURE = 'EDIT_PROJECT_FAILURE';
+
 export const GET_PROJECT_REQUEST = 'GET_PROJECT_REQUEST';
 export const GET_PROJECT_SUCCESS = 'GET_PROJECT_SUCCESS';
 export const GET_PROJECT_FAILURE = 'GET_PROJECT_FAILURE';
+
+export const FETCH_ALL_PROJECTS_REQUEST = 'FETCH_ALL_PROJECTS_REQUEST';
+export const FETCH_ALL_PROJECTS_SUCCESS = 'FETCH_ALL_PROJECTS_SUCCESS';
+export const FETCH_ALL_PROJECTS_FAILURE = 'FETCH_ALL_PROJECTS_FAILURE';
 
 // Action Creators
 export const fetchProjectsRequest = () => ({ type: FETCH_PROJECTS_REQUEST });
@@ -62,6 +68,30 @@ export const getProjectFailure = (error: string) => ({
   type: GET_PROJECT_FAILURE,
   payload: error,
 });
+
+export const fetchAllProjectsRequest = () => ({ type: FETCH_ALL_PROJECTS_REQUEST });
+
+export const fetchAllProjectsSuccess = (projects: any[]) => ({
+  type: FETCH_ALL_PROJECTS_SUCCESS,
+  payload: projects,
+});
+
+export const fetchAllProjectsFailure = (error: string) => ({
+  type: FETCH_ALL_PROJECTS_FAILURE,
+  payload: error,
+});
+
+export const fetchAllProjects = () => async (dispatch: any) => {
+  try {
+    dispatch(fetchAllProjectsRequest());
+
+    const response = await axiosInstance.get('/projects/all'); // Update with the correct API endpoint for fetching all projects
+
+    dispatch(fetchAllProjectsSuccess(response.data.projects));
+  } catch (error) {
+    dispatch(fetchAllProjectsFailure(error.message));
+  }
+};
 
 // Thunk Action Creator
 export const fetchProjects = () => async (dispatch: any) => {

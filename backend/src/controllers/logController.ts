@@ -30,10 +30,10 @@ export const logController = {
 
   async editLog(req: Request, res: Response): Promise<void> {
     try {
-      const { logId } = req.params;
+      const { id } = req.params;
       const { projectId, status, duration, date, note } = req.body;
 
-      const updatedLog = await logService.editLog(logId, {
+      const updatedLog = await logService.editLog(id, {
         projectId,
         status,
         duration,
@@ -90,4 +90,5 @@ export const logController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
 };

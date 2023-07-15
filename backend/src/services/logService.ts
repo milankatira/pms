@@ -1,5 +1,5 @@
 import Log, { ILog } from "../models/log";
-import { IProject } from "../models/project";
+import project, { IProject } from "../models/project";
 import { IUser } from "../models/user";
 
 export const logService = {
@@ -44,4 +44,5 @@ export const logService = {
     const log = await Log.findById(logId).exec();
     return log;
   },
+
 };

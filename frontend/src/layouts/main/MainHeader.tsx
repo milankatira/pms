@@ -77,29 +77,18 @@ export default function MainHeader() {
         >
           <Logo />
 
-          <Link
-            href="https://docs-minimals.vercel.app/changelog"
-            target="_blank"
-            rel="noopener"
-            underline="none"
-          >
-            <Label color="info" sx={{ ml: 1 }}>
-              v3.5.0
-            </Label>
-          </Link>
-
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
 
-          <Button
+          {/* <Button
             variant="contained"
             target="_blank"
             rel="noopener"
             href="https://material-ui.com/store/items/minimal-dashboard/"
           >
             Purchase Now
-          </Button>
+          </Button> */}
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
         </Container>

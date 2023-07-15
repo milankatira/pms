@@ -44,6 +44,7 @@ const logReducer = (state = initialState, action: any) => {
         loading: false,
       };
     case GET_LOG_SUCCESS:
+      console.log(action.payload, 'action.payload');
       return {
         ...state,
         loading: false,

@@ -27,11 +27,11 @@ import {
   BlogPostRecent,
   BlogPostCommentList,
   BlogPostCommentForm,
-} from '../../../../sections/@dashboard/blog';
+} from '../../../../sections/@dashboard/logs';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
 import { useSelector } from 'react-redux';
-import { getProject } from 'src/store/action/products.action';
+import { fetchAllProjects, getProject } from 'src/store/action/products.action';
 import { useDispatch } from 'react-redux';
 import { getLog } from 'src/store/action/logs.action';
 
@@ -48,6 +48,10 @@ export default function BlogPost() {
   const { log } = useSelector((state: RootState) => state.logs);
   useEffect(() => {
     dispatch(getLog(title as unknown as string));
+
+    return () => {
+      dispatch(getLog(title as unknown as string));
+    };
   }, []);
 
   const { themeStretch } = useSettings();
@@ -56,6 +60,9 @@ export default function BlogPost() {
 
   const { title } = query;
 
+  useEffect(() => {
+    dispatch(fetchAllProjects());
+  }, []);
   return (
     <Page title="Blog: Post Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>

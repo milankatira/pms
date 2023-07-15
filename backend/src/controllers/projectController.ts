@@ -42,6 +42,15 @@ export const projectController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+  async getProjects(req: Request, res: Response): Promise<void> {
+    try {
+      const projects = await projectService.getProjects();
+      res.status(200).json({ projects });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 
   async getProjectById(req: Request, res: Response): Promise<void> {
     try {
@@ -58,6 +67,39 @@ export const projectController = {
     }
   },
 
+  async getProjectsAnalytics(req: Request, res: Response): Promise<void> {
+    try {
+      const project = await projectService.getProjectsAnalytics();
+      if (!project) {
+        res.status(404).json({ error: "Project not found" });
+        return;
+      }
+      res.status(200).json({
+        message: "Project updated successfully",
+        project,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async getProjectsAnalyticsAll(req: Request, res: Response): Promise<void> {
+    try {
+      const project = await projectService.getProjectsAnalyticsAll();
+      if (!project) {
+        res.status(404).json({ error: "Project not found" });
+        return;
+      }
+      res.status(200).json({
+        message: "Project updated successfully",
+        project,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
   async editProjectById(req: Request, res: Response): Promise<void> {
     try {
       const projectId = req.params.id;
@@ -72,12 +114,10 @@ export const projectController = {
         res.status(404).json({ error: "Project not found" });
         return;
       }
-      res
-        .status(200)
-        .json({
-          message: "Project updated successfully",
-          project: updatedProject,
-        });
+      res.status(200).json({
+        message: "Project updated successfully",
+        project: updatedProject,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

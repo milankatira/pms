@@ -20,12 +20,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjects } from 'src/store/action/products.action';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
-
+import { AppAreaInstalled } from 'src/sections/@dashboard/general/app';
+import { getLast15Days } from 'src/utils/formatTime';
 
 BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
 };
-
 
 export default function BlogPosts() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
@@ -78,6 +78,30 @@ export default function BlogPosts() {
                   <SkeletonPostItem key={index} />
                 )
             )}
+        </Grid>
+        <br />
+        <Grid item xs={12} md={6} lg={8}>
+          <AppAreaInstalled
+            title="Area Installed"
+            subheader="(+43%) than last year"
+            chartLabels={getLast15Days()}
+            chartData={[
+              {
+                year: '2019',
+                data: [
+                  { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
+                  { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
+                ],
+              },
+              {
+                year: '2020',
+                data: [
+                  { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
+                  { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
+                ],
+              },
+            ]}
+          />
         </Grid>
       </Container>
     </Page>
