@@ -37,10 +37,10 @@ export const logService = {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
     const totalLogs = await Log.countDocuments({ userId });
     const logs = await Log.find({ userId }, { note: 0 })
-      .populate("projectId", "name")
-      .skip(skip) // Skip the specified number of documents
-      .limit(limit) // Limit the number of documents to retrieve
-      .exec();
+    .skip(skip) // Skip the specified number of documents
+    .limit(limit) // Limit the number of documents to retrieve
+    .populate("projectId", "name")
+    .exec()
 
     return { logs, totalLogs };
   },
