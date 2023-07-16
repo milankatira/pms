@@ -76,13 +76,20 @@ export const logController = {
   async getAllLogs(req: any, res: Response): Promise<void> {
     try {
       const { userId } = req.user;
+      const { page, limit } = req.query;
+      const pageNumber = parseInt(page, 10) || 1;
+      const limitNumber = parseInt(limit, 10) || 10;
 
       if (!userId) {
         res.status(404).json({ error: "User not found" });
         return;
       }
 
-      const logs = await logService.getLogsByUserId(userId);
+      const logs = await logService.getLogsByUserId(
+        userId,
+        pageNumber,
+        limitNumber
+      );
 
       res.status(200).json({ logs });
     } catch (error) {
