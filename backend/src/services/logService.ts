@@ -30,7 +30,9 @@ export const logService = {
   },
 
   async getLogsByUserId(userId: IUser["_id"]): Promise<ILog[]> {
-    const logs = await Log.find({ userId }).exec();
+    const logs = await Log.find({ userId }, { note: 0 })
+      .populate("projectId", "name")
+      .exec();
     return logs;
   },
 
