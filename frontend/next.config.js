@@ -14,7 +14,7 @@ module.exports = withTM({
   trailingSlash: true,
   env: {
     // HOST
-    HOST_API_KEY: 'http://localhost:3000',
+    HOST_API_KEY: 'https://pms-backend-m932.onrender.com',
     // MAPBOX
     MAPBOX_API: '',
     // FIREBASE
