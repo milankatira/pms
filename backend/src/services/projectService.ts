@@ -298,4 +298,16 @@ export const projectService = {
 
     return projectData;
   },
+
+  async deleteProjectById(projectId: string): Promise<boolean> {
+    const deletedProject = await Project.findByIdAndDelete(projectId);
+
+    if (!deletedProject) {
+      return false;
+    }
+
+    await Log.deleteMany({ projectId: projectId });
+
+    return true;
+  },
 };

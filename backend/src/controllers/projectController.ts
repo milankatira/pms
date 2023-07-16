@@ -100,6 +100,7 @@ export const projectController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
   async editProjectById(req: Request, res: Response): Promise<void> {
     try {
       const projectId = req.params.id;
@@ -118,6 +119,24 @@ export const projectController = {
         message: "Project updated successfully",
         project: updatedProject,
       });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async deleteProjectById(req: Request, res: Response): Promise<void> {
+    try {
+      const projectId = req.params.id;
+
+      const deleted = await projectService.deleteProjectById(projectId);
+
+      if (!deleted) {
+        res.status(404).json({ error: "Project not found" });
+        return;
+      }
+
+      res.status(200).json({ message: "Project deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

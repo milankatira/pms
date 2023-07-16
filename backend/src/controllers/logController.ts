@@ -111,10 +111,27 @@ export const logController = {
 
   async getStatusCounts(req: Request, res: Response): Promise<void> {
     try {
-
       const statusCounts = await logService.getStatusCounts();
 
       res.status(200).json({ statusCounts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async deleteLogById(req: Request, res: Response): Promise<void> {
+    try {
+      const logId = req.params.id;
+
+      const deleted = await logService.deleteLogById(logId);
+
+      if (!deleted) {
+        res.status(404).json({ error: "Log not found" });
+        return;
+      }
+
+      res.status(200).json({ message: "Log deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });

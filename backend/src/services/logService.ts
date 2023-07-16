@@ -112,4 +112,13 @@ export const logService = {
     ]).exec();
     return result;
   },
+
+  async deleteLogById(logId: ILog["_id"]): Promise<boolean> {
+    const deletedLog = await Log.findByIdAndDelete(logId);
+    if (!deletedLog) {
+      return false;
+    }
+
+    return true;
+  },
 };
