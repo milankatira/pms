@@ -91,56 +91,58 @@ export default function BlogPosts() {
         <br />
 
         <Grid item xs={12} md={6} lg={8}>
-          <AppAreaInstalled
-            title="Project log"
-            chartLabels={
-              dashboardLogs &&
-              dashboardLogs.length >= 1 &&
-              dashboardLogs?.map((i: { _id: Date }) => i._id)
-            }
-            chartData={[
-              {
-                year: '2019',
-                data: [
-                  {
-                    name: 'paid',
-                    data:
-                      projectData &&
-                      projectData.length >= 1 &&
-                      projectData?.map((i: { statusCount: number[] }) => i?.statusCount[0]),
-                  },
-                  {
-                    name: 'unpaid',
-                    data:
-                      projectData &&
-                      projectData.length >= 1 &&
-                      projectData?.map((i: { statusCount: number[] }) => i?.statusCount[1]),
-                  },
-                  {
-                    name: 'overdue',
-                    data:
-                      projectData &&
-                      projectData.length >= 1 &&
-                      projectData?.map((i: { statusCount: number[] }) => i?.statusCount[2]),
-                  },
-                  {
-                    name: 'draft',
-                    data:
-                      projectData &&
-                      projectData.length >= 1 &&
-                      projectData?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
-                  },
-                ],
-              },
-              {
-                year: '2020',
-                data: [
-                  { name: 'paid', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                  { name: 'unpaid', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                ],
-              },
-            ]}
-          />
+          {dashboardLogs && dashboardLogs.length >= 1 && (
+            <AppAreaInstalled
+              title="Project log"
+              chartLabels={
+                dashboardLogs &&
+                dashboardLogs.length >= 1 &&
+                dashboardLogs?.map((i: { _id: Date }) => i._id)
+              }
+              chartData={[
+                {
+                  year: '2019',
+                  data: [
+                    {
+                      name: 'paid',
+                      data:
+                        projectData &&
+                        projectData.length >= 1 &&
+                        projectData?.map((i: { statusCount: number[] }) => i?.statusCount[0]),
+                    },
+                    {
+                      name: 'unpaid',
+                      data:
+                        projectData &&
+                        projectData.length >= 1 &&
+                        projectData?.map((i: { statusCount: number[] }) => i?.statusCount[1]),
+                    },
+                    {
+                      name: 'overdue',
+                      data:
+                        projectData &&
+                        projectData.length >= 1 &&
+                        projectData?.map((i: { statusCount: number[] }) => i?.statusCount[2]),
+                    },
+                    {
+                      name: 'draft',
+                      data:
+                        projectData &&
+                        projectData.length >= 1 &&
+                        projectData?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
+                    },
+                  ],
+                },
+                {
+                  year: '2020',
+                  data: [
+                    { name: 'paid', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
+                    { name: 'unpaid', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
+                  ],
+                },
+              ]}
+            />
+          )}
         </Grid>
       </Container>
     </Page>

@@ -177,6 +177,13 @@ export default function BaseOptionChart(): ApexOptions {
         breakpoint: theme.breakpoints.values.sm,
         options: {
           plotOptions: { bar: { columnWidth: '40%' } },
+          chart: {
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            animations: { enabled: false },
+            foreColor: theme.palette.text.disabled,
+            fontFamily: theme.typography.fontFamily,
+          },
         },
       },
       {
@@ -184,6 +191,13 @@ export default function BaseOptionChart(): ApexOptions {
         breakpoint: theme.breakpoints.values.md,
         options: {
           plotOptions: { bar: { columnWidth: '32%' } },
+          chart: {
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            animations: { enabled: false },
+            foreColor: theme.palette.text.disabled,
+            fontFamily: theme.typography.fontFamily,
+          },
         },
       },
     ],
