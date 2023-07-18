@@ -22,6 +22,7 @@ const initialState = {
   error: null,
   log: null,
   dashboardLogs: [],
+  numberOfLogs: null,
 };
 
 const logReducer = (state = initialState, action: any) => {
@@ -40,6 +41,7 @@ const logReducer = (state = initialState, action: any) => {
         ...state,
         loading: false,
         logs: action.payload,
+        numberOfLogs: action.numberOfLog,
       };
     case CREATE_LOG_SUCCESS:
     case EDIT_LOG_SUCCESS:

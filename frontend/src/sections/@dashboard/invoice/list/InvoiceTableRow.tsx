@@ -10,14 +10,13 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import { Invoice } from '../../../../@types/invoice';
 // components
 import Label from '../../../../components/Label';
-import Avatar from '../../../../components/Avatar';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: Invoice;
+  row: { createAt: Date; status: string; project: string };
   selected: boolean;
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
@@ -35,7 +34,7 @@ export default function InvoiceTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalPrice } = row;
+  const { createAt, status, project } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -53,36 +52,9 @@ export default function InvoiceTableRow({
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={invoiceTo.name} color={createAvatar(invoiceTo.name).color} sx={{ mr: 2 }}>
-          {createAvatar(invoiceTo.name).name}
-        </Avatar>
-
-        <Stack>
-          <Typography variant="subtitle2" noWrap>
-            {invoiceTo.name}
-          </Typography>
-
-          <Link
-            noWrap
-            variant="body2"
-            onClick={onViewRow}
-            sx={{ color: 'text.disabled', cursor: 'pointer' }}
-          >
-            {`INV-${invoiceNumber}`}
-          </Link>
-        </Stack>
-      </TableCell>
-
-      <TableCell align="left">{fDate(createDate)}</TableCell>
-
-      <TableCell align="left">{fDate(dueDate)}</TableCell>
-
-      <TableCell align="center">{fCurrency(totalPrice)}</TableCell>
-
-      <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
-        {sent}
-      </TableCell>
+      <TableCell align="left">{project}</TableCell>
+      {/* @ts-ignore */}
+      <TableCell align="left">{fDate(createAt)}</TableCell>
 
       <TableCell align="left">
         <Label
@@ -106,17 +78,6 @@ export default function InvoiceTableRow({
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
-                onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Delete
-              </MenuItem>
-
               <MenuItem
                 onClick={() => {
                   onViewRow();

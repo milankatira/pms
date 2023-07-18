@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { dispatch } from 'src/redux/store';
+import { fetchLogs } from 'src/store/action/logs.action';
 
 // ----------------------------------------------------------------------
 
@@ -81,6 +83,7 @@ export default function useTable(props?: Props) {
 
   const onChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
+    dispatch(fetchLogs(3,10))
   };
 
   const onChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {

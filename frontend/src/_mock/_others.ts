@@ -58,16 +58,16 @@ export const _accordions = [...Array(4)].map((_, index) => ({
 
 export const _dataGrid = [...Array(36)].map((_, index) => ({
   id: _mock.id(index),
-  name: _mock.name.fullName(index),
-  email: _mock.email(index),
-  lastLogin: _mock.time(index),
-  performance: _mock.number.percent(index),
-  rating: _mock.number.rating(index),
-  status: randomInArray(['online', 'away', 'busy']),
-  isAdmin: _mock.boolean(index),
-  lastName: _mock.name.lastName(index),
-  firstName: _mock.name.firstName(index),
-  age: _mock.number.age(index),
+  // name: _mock.name.fullName(index),
+  // email: _mock.email(index),
+  // lastLogin: _mock.time(index),
+  // performance: _mock.number.percent(index),
+  // rating: _mock.number.rating(index),
+  // status: randomInArray(['online', 'away', 'busy']),
+  // isAdmin: _mock.boolean(index),
+  // lastName: _mock.name.lastName(index),
+  // firstName: _mock.name.firstName(index),
+  // age: _mock.number.age(index),
 }));
 
 // ----------------------------------------------------------------------

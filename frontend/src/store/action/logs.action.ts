@@ -24,9 +24,10 @@ export const FETCH_DASHBOARD_LOGS_FAILURE = 'FETCH_DASHBOARD_LOGS_FAILURE';
 // Action Creators
 export const fetchLogsRequest = () => ({ type: FETCH_LOGS_REQUEST });
 
-export const fetchLogsSuccess = (logs: any[]) => ({
+export const fetchLogsSuccess = (logs: any[], numberOfLog?: number) => ({
   type: FETCH_LOGS_SUCCESS,
   payload: logs,
+  numberOfLog,
 });
 
 export const fetchLogsFailure = (error: string) => ({
@@ -95,17 +96,25 @@ export const fetchDashboardLogs = () => async (dispatch: any) => {
   }
 };
 
-export const fetchLogs = () => async (dispatch: any) => {
-  try {
-    dispatch(fetchLogsRequest());
+export const fetchLogs =
+  (page = 0, limit = 10) =>
+  async (
+    dispatch: (arg0: {
+      type: string;
+      payload?: string | any[];
+      numberOfLog?: number | undefined;
+    }) => void
+  ) => {
+    try {
+      dispatch(fetchLogsRequest());
 
-    const response = await axiosInstance.get('/logs'); // Update with your API endpoint
+      const response = await axiosInstance.get('/logs', { params: { page, limit } });
 
-    dispatch(fetchLogsSuccess(response.data.logs));
-  } catch (error) {
-    dispatch(fetchLogsFailure(error.message));
-  }
-};
+      dispatch(fetchLogsSuccess(response.data.logs.logs, response.data.logs.totalLogs));
+    } catch (error) {
+      dispatch(fetchLogsFailure(error.message));
+    }
+  };
 
 export const createLog = (logData: any) => async (dispatch: any) => {
   try {

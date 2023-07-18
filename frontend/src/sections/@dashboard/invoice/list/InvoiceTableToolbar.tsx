@@ -48,21 +48,22 @@ export default function InvoiceTableToolbar({
           textTransform: 'capitalize',
         }}
       >
-        {optionsService.map((option) => (
-          <MenuItem
-            key={option}
-            value={option}
-            sx={{
-              mx: 1,
-              my: 0.5,
-              borderRadius: 0.75,
-              typography: 'body2',
-              textTransform: 'capitalize',
-            }}
-          >
-            {option}
-          </MenuItem>
-        ))}
+        {optionsService &&
+          optionsService.map((option) => (
+            <MenuItem
+              key={option}
+              value={option}
+              sx={{
+                mx: 1,
+                my: 0.5,
+                borderRadius: 0.75,
+                typography: 'body2',
+                textTransform: 'capitalize',
+              }}
+            >
+              {option}
+            </MenuItem>
+          ))}
       </TextField>
 
       <DatePicker
@@ -95,22 +96,6 @@ export default function InvoiceTableToolbar({
         )}
       />
 
-      <TextField
-        fullWidth
-        value={filterName}
-        onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Search client or invoice number..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify
-                icon={'eva:search-fill'}
-                sx={{ color: 'text.disabled', width: 20, height: 20 }}
-              />
-            </InputAdornment>
-          ),
-        }}
-      />
     </Stack>
   );
 }

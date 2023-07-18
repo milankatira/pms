@@ -55,7 +55,7 @@ export default function BlogPosts() {
           action={
             <NextLink href={PATH_DASHBOARD.blog.new} passHref>
               <Button variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}>
-                New Post
+                New Project
               </Button>
             </NextLink>
           }
@@ -76,7 +76,7 @@ export default function BlogPosts() {
                 index: number
               ) =>
                 post ? (
-                  <Grid key={post._id} item xs={12} sm={6} md={(index === 0 && 6) || 3}>
+                  <Grid key={post._id} item xs={12} sm={6} md={6}>
                     <BlogPostCard post={post} index={index} />
                   </Grid>
                 ) : (
