@@ -55,7 +55,9 @@ export const logService = {
   },
 
   async getLogById(logId: ILog["_id"]): Promise<ILog | null> {
-    const log = await Log.findById(logId).exec();
+    const log = await Log.findById(logId)
+    .populate("projectId", "name")
+    .exec();
     return log;
   },
 
