@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/user";
+import { authService } from "../services/authService";
+import { ObjectId } from "mongoose";
 
 export const authController = {
   async register(req: Request, res: Response): Promise<void> {
@@ -59,6 +61,21 @@ export const authController = {
   async logout(req: Request, res: Response): Promise<void> {
     try {
       res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  async getMe(req: any, res: Response): Promise<void> {
+    try {
+      const user = await authService.getMe(
+        req.user.userId as unknown as ObjectId
+      );
+      delete user.password;
+      if (user) {
+        res.status(200).json({ message: "Logged out successfully", user });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Internal Server Error" });
