@@ -74,7 +74,7 @@ export const authController = {
       );
       delete user.password;
       if (user) {
-        res.status(200).json({ message: "Logged out successfully", user });
+        res.status(200).json({ message: "userInfo fetch successfully", user });
       }
     } catch (error) {
       console.error(error);
