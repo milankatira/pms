@@ -16,11 +16,12 @@ type Props = {
   post: {
     _id: number;
     status: string;
-    projectId: number;
+    projectId: {
+      name: string;
+    };
     duration: number;
     note: string;
     date: Date;
-
   };
   index?: number;
 };
@@ -32,8 +33,8 @@ export default function BlogPostCard({ post, index }: Props) {
 
   return (
     <Card className={style.card}>
-      <div className={style.name__container}>
-        <TableCell align="left">
+      <div className={style.status__container}>
+        <TableCell align="right">
           <Label
             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
             color={
@@ -48,15 +49,24 @@ export default function BlogPostCard({ post, index }: Props) {
           </Label>
         </TableCell>
       </div>
-      <Typography className={style.bold}>description</Typography>
+
+      <div className={style.name__container}>
+        <Typography className={style.bold}>project</Typography>
+        <p>{post?.projectId?.name}</p>
+      </div>
       <div className={style.name__container}>
         <Typography className={style.bold}>starting date</Typography>
-
         <p>{fDate(post?.date)}</p>
       </div>
+      <br />
+      <Typography className={style.bold}>description</Typography>
+      <br />
+      <div
+        className={style.note__container}
+        dangerouslySetInnerHTML={{ __html: post && post.note }}
+      />
 
       <br />
-
       <NextLink href={linkTo} passHref>
         <Button>Edit</Button>
       </NextLink>

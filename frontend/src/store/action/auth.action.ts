@@ -7,11 +7,30 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const AUTH_ERROR = 'AUTH_ERROR';
 
+export const REGISTER_REQUEST = 'REGISTER_REQUEST';
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+
+export const FETCH_ME_REQUEST = 'FETCH_ME_REQUEST';
+export const FETCH_ME_SUCCESS = 'FETCH_ME_SUCCESS';
+export const FETCH_ME_FAILURE = 'FETCH_ME_FAILURE';
+
+export const fetchMe = (router: any) => async (dispatch: Dispatch) => {
+  try {
+    dispatch({ type: FETCH_ME_REQUEST });
+    const res = await axios.get('/auth/me');
+    dispatch({ type: FETCH_ME_SUCCESS, payload: res.data });
+    router.push('/dashboard/app');
+  } catch (error) {
+    dispatch({ type: FETCH_ME_FAILURE, payload: error.response.data.error });
+  }
+};
+
 // Register Action
 export const register =
   (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     try {
-      const res = await axios.post('/auth/register', { email, password });
+      dispatch({ type: REGISTER_REQUEST });
+      await axios.post('/auth/register', { email, password });
       dispatch({ type: REGISTER_SUCCESS });
       router.push('/');
       // You can perform additional actions after a successful registration, such as redirecting the user or displaying a success message.
@@ -25,10 +44,10 @@ export const register =
 export const login =
   (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: LOGIN_REQUEST });
       const res = await axios.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
       dispatch({ type: LOGIN_SUCCESS });
-      // Router.push("/")
       router.push(PATH_DASHBOARD.blog.root);
       // You can perform additional actions after a successful login, such as storing the token in local storage or redirecting the user.
     } catch (error) {
@@ -36,7 +55,6 @@ export const login =
       // You can handle the error, such as displaying an error message to the user.
     }
   };
-
 // Logout Action
 export const logout = () => async (dispatch: Dispatch) => {
   try {

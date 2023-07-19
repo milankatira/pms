@@ -65,11 +65,12 @@ export default function BlogPostCard({ post, index }: Props) {
 
         <p>{fDate(post?.createdAt)}</p>
       </div>
-
-      <div className={style.name__container}>
-        <Typography className={style.bold}>logs</Typography>
-        <p>{post.logCount}</p>
-      </div>
+      {post.logCount && (
+        <div className={style.name__container}>
+          <Typography className={style.bold}>logs</Typography>
+          <p>{post.logCount}</p>
+        </div>
+      )}
       <br />
     </Card>
   );

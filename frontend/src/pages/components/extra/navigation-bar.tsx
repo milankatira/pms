@@ -12,6 +12,11 @@ import Page from '../../../components/Page';
 import Iconify from '../../../components/Iconify';
 import { NavSectionVertical } from '../../../components/nav-section';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchMe } from 'src/store/action/auth.action';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +34,7 @@ DemoNavigationBar.getLayout = function getLayout(page: React.ReactElement) {
 // ----------------------------------------------------------------------
 
 export default function DemoNavigationBar() {
+
   return (
     <Page title="Components: Navigation Bar">
       <RootStyle>

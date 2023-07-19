@@ -1,6 +1,5 @@
 import { Provider } from 'react-redux';
 import { store as ReduxStore } from '../store/index';
-import rootReducer from '../store/reducer/index';
 // i18n
 import '../locales/i18n';
 
@@ -41,8 +40,6 @@ import App, { AppProps, AppContext } from 'next/app';
 // @mui
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-// redux
-import { store } from '../redux/store';
 // utils
 import { getSettings } from '../utils/getSettings';
 // contexts
@@ -62,9 +59,6 @@ import MotionLazyContainer from '../components/animate/MotionLazyContainer';
 // https://docs-minimals.vercel.app/authentication/ts-version
 
 import { AuthProvider } from '../contexts/JWTContext';
-// import { AuthProvider } from '../contexts/Auth0Context';
-// import { AuthProvider } from '../contexts/FirebaseContext';
-// import { AuthProvider } from '../contexts/AwsCognitoContext';
 
 // ----------------------------------------------------------------------
 

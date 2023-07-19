@@ -127,14 +127,7 @@ export default function BlogPosts() {
                         project?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
                     },
                   ],
-                },
-                {
-                  year: '2020',
-                  data: [
-                    { name: 'paid', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                    { name: 'unpaid', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                  ],
-                },
+                }
               ]}
             />
           )}

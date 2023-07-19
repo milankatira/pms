@@ -17,6 +17,11 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from 'src/redux/store';
+import { useDispatch } from 'react-redux';
+import { fetchMe } from 'src/store/action/auth.action';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +61,12 @@ export default function MainHeader() {
   const isDesktop = useResponsive('up', 'md');
 
   const isHome = pathname === '/';
+  const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    dispatch(fetchMe(router));
+  }, []);
 
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
