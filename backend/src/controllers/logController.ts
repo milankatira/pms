@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { logService } from "../services/logService";
+import mongoose from "mongoose";
 
 export const logController = {
   async createLog(req: any, res: Response): Promise<void> {
@@ -144,4 +145,30 @@ export const logController = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  async getTotalDurationByGroup(req: any, res: Response): Promise<void> {
+    try {
+      const { projectId, status } = req.query;
+
+      const criteria: any = {};
+      if (projectId) {
+        criteria.projectId = new mongoose.Types.ObjectId(projectId.toString());
+      }
+      if (status) {
+        criteria.status = status.toString();
+      }
+      criteria.userId = new mongoose.Types.ObjectId(req.user.userId);
+      const result = await logService.getTotalDurationByGroup(criteria);
+
+      res.status(200).json({
+        totalDuration: result.length ? result[0].totalDuration : 0,
+        totalLogs: result.length ? result[0].totalLogs : 0,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+
 };

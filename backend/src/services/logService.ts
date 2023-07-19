@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Log, { ILog } from "../models/log";
 import { IProject } from "../models/project";
 import { IUser } from "../models/user";
@@ -37,10 +38,10 @@ export const logService = {
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
     const totalLogs = await Log.countDocuments({ userId });
     const logs = await Log.find({ userId }, { note: 0 })
-    .skip(skip) // Skip the specified number of documents
-    .limit(limit) // Limit the number of documents to retrieve
-    .populate("projectId", "name")
-    .exec()
+      .skip(skip) // Skip the specified number of documents
+      .limit(limit) // Limit the number of documents to retrieve
+      .populate("projectId", "name")
+      .exec();
 
     return { logs, totalLogs };
   },
@@ -55,9 +56,7 @@ export const logService = {
   },
 
   async getLogById(logId: ILog["_id"]): Promise<ILog | null> {
-    const log = await Log.findById(logId)
-    .populate("projectId", "name")
-    .exec();
+    const log = await Log.findById(logId).populate("projectId", "name").exec();
     return log;
   },
 
@@ -132,5 +131,29 @@ export const logService = {
     }
 
     return true;
+  },
+
+  async getTotalDurationByGroup(criteria: any): Promise<any[]> {
+    const result = await Log.aggregate([
+      {
+        $match: criteria,
+      },
+      {
+        $group: {
+          _id: "$userId",
+          totalDuration: { $sum: "$duration" },
+          totalLogs: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: "$_id",
+          totalDuration: 1,
+          totalLogs: 1,
+        },
+      },
+    ]).exec();
+    return result;
   },
 };

@@ -11,5 +11,10 @@ router
   .get("/:id", Auth, logController.getLog)
   .delete("/:id", Auth, logController.deleteLogById)
   .put("/:id", Auth, logController.editLog);
+router.get(
+  "/dashboard/total-duration-and-count",
+  Auth,
+  logController.getTotalDurationByGroup
+);
 
 export { router as logRouter };
