@@ -14,6 +14,9 @@ import {
   FETCH_DASHBOARD_LOGS_REQUEST,
   FETCH_DASHBOARD_LOGS_SUCCESS,
   FETCH_DASHBOARD_LOGS_FAILURE,
+  FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_REQUEST,
+  FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS,
+  FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_FAILURE,
 } from '../action/logs.action';
 
 const initialState = {
@@ -23,6 +26,8 @@ const initialState = {
   log: null,
   dashboardLogs: [],
   numberOfLogs: null,
+  totalDuration: null,
+  logCount: null,
 };
 
 const logReducer = (state = initialState, action: any) => {
@@ -31,6 +36,7 @@ const logReducer = (state = initialState, action: any) => {
     case CREATE_LOG_REQUEST:
     case EDIT_LOG_REQUEST:
     case GET_LOG_REQUEST:
+    case FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -59,6 +65,7 @@ const logReducer = (state = initialState, action: any) => {
     case CREATE_LOG_FAILURE:
     case EDIT_LOG_FAILURE:
     case GET_LOG_FAILURE:
+    case FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_FAILURE:
       return {
         ...state,
         loading: false,
@@ -82,6 +89,15 @@ const logReducer = (state = initialState, action: any) => {
         loading: false,
         error: action.payload,
       };
+
+    case FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        totalDuration: action.payload.totalDuration,
+        logCount: action.payload.logCount,
+      };
+
     default:
       return state;
   }

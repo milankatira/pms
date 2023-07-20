@@ -161,8 +161,7 @@ export const logController = {
       const result = await logService.getTotalDurationByGroup(criteria);
 
       res.status(200).json({
-        totalDuration: result.length ? result[0].totalDuration : 0,
-        totalLogs: result.length ? result[0].totalLogs : 0,
+      result
       });
     } catch (error) {
       console.error(error);

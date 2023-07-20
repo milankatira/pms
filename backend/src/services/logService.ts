@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Log, { ILog } from "../models/log";
 import { IProject } from "../models/project";
 import { IUser } from "../models/user";
@@ -140,7 +139,10 @@ export const logService = {
       },
       {
         $group: {
-          _id: "$userId",
+          _id: {
+            userId:"$userId",
+            status: "$status",
+          },
           totalDuration: { $sum: "$duration" },
           totalLogs: { $sum: 1 },
         },
@@ -151,9 +153,20 @@ export const logService = {
           userId: "$_id",
           totalDuration: 1,
           totalLogs: 1,
+          status: 1,
         },
       },
     ]).exec();
+    const totalSum = result.reduce(
+      (acc, current) => {
+        acc.totalDuration += current.totalDuration;
+        acc.totalLogs += current.totalLogs;
+        return acc;
+      },
+      { totalDuration: 0, totalLogs: 0 }
+    );
+
+    result.unshift(totalSum);
     return result;
   },
 };

@@ -21,7 +21,32 @@ export const FETCH_DASHBOARD_LOGS_REQUEST = 'FETCH_DASHBOARD_LOGS_REQUEST';
 export const FETCH_DASHBOARD_LOGS_SUCCESS = 'FETCH_DASHBOARD_LOGS_SUCCESS';
 export const FETCH_DASHBOARD_LOGS_FAILURE = 'FETCH_DASHBOARD_LOGS_FAILURE';
 
+export const FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_REQUEST =
+  'FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_REQUEST';
+export const FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS =
+  'FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS';
+export const FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_FAILURE =
+  'FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_FAILURE';
+
 // Action Creators
+
+export const fetchDashboardTotalDurationAndLogCountRequest = () => ({
+  type: FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_REQUEST,
+});
+
+export const fetchDashboardTotalDurationAndLogCountSuccess = (
+  totalDuration: number,
+  logCount: number
+) => ({
+  type: FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS,
+  payload: { totalDuration, logCount },
+});
+
+export const fetchDashboardTotalDurationAndLogCountFailure = (error: string) => ({
+  type: FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_FAILURE,
+  payload: error,
+});
+
 export const fetchLogsRequest = () => ({ type: FETCH_LOGS_REQUEST });
 
 export const fetchLogsSuccess = (logs: any[], numberOfLog?: number) => ({
@@ -143,5 +168,24 @@ export const getLog = (logId: string) => async (dispatch: any) => {
     dispatch(getLogSuccess(response.data));
   } catch (error) {
     dispatch(getLogFailure(error.message));
+  }
+};
+
+export const fetchDashboardTotalDurationAndLogCount = () => async (dispatch: any) => {
+  try {
+    dispatch(fetchDashboardTotalDurationAndLogCountRequest());
+
+    const totalDurationAndLogCountResponse = await axiosInstance.get(
+      'logs/dashboard/total-duration-and-count'
+    );
+
+    dispatch(
+      fetchDashboardTotalDurationAndLogCountSuccess(
+        totalDurationAndLogCountResponse.data.totalDuration,
+        totalDurationAndLogCountResponse.data.totalLogs
+      )
+    );
+  } catch (error) {
+    dispatch(fetchDashboardTotalDurationAndLogCountFailure(error.message));
   }
 };
