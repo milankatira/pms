@@ -2,7 +2,6 @@ import Log, { ILog } from "../models/log";
 import { IProject } from "../models/project";
 import { IUser } from "../models/user";
 
-// Get the date 15 days ago
 const fifteenDaysAgo = new Date();
 fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
 
@@ -34,11 +33,11 @@ export const logService = {
     page: number,
     limit: number
   ): Promise<{ logs: ILog[]; totalLogs: number }> {
-    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+    const skip = (page - 1) * limit; 
     const totalLogs = await Log.countDocuments({ userId });
     const logs = await Log.find({ userId }, { note: 0 })
-      .skip(skip) // Skip the specified number of documents
-      .limit(limit) // Limit the number of documents to retrieve
+      .skip(skip) 
+      .limit(limit) 
       .populate("projectId", "name")
       .exec();
 
@@ -140,7 +139,6 @@ export const logService = {
       {
         $group: {
           _id: {
-            userId:"$userId",
             status: "$status",
           },
           totalDuration: { $sum: "$duration" },
@@ -150,10 +148,10 @@ export const logService = {
       {
         $project: {
           _id: 0,
-          userId: "$_id",
+          status: "$_id",
           totalDuration: 1,
           totalLogs: 1,
-          status: 1,
+          // status: 1,
         },
       },
     ]).exec();
