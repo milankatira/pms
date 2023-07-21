@@ -9,7 +9,7 @@ import ReactApexChart, { BaseOptionChart } from '../../../../components/chart';
 
 // ----------------------------------------------------------------------
 
-const CHART_HEIGHT = 392;
+const CHART_HEIGHT = 500;
 const LEGEND_HEIGHT = 72;
 
 const ChartWrapperStyle = styled('div')(({ theme }) => ({
@@ -54,7 +54,13 @@ export default function AppCurrentDownload({
   const chartSeries = chartData.map((i) => i.value);
 
   const chartOptions = merge(BaseOptionChart(), {
-    colors: chartColors,
+    chart: {
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: { enabled: false },
+      foreColor: theme.palette.text.disabled,
+      fontFamily: theme.typography.fontFamily,
+    },
     labels: chartLabels,
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },

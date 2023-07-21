@@ -21,11 +21,10 @@ export const fetchMe = (router: any) => async (dispatch: Dispatch) => {
     dispatch({ type: FETCH_ME_SUCCESS, payload: res.data });
     router.push('/dashboard/app');
   } catch (error) {
-    dispatch({ type: FETCH_ME_FAILURE, payload: error.response.data.error });
+    dispatch({ type: FETCH_ME_FAILURE, payload: error?.response?.data?.error });
   }
 };
 
-// Register Action
 export const register =
   (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     try {
@@ -33,14 +32,11 @@ export const register =
       await axios.post('/auth/register', { email, password });
       dispatch({ type: REGISTER_SUCCESS });
       router.push('/');
-      // You can perform additional actions after a successful registration, such as redirecting the user or displaying a success message.
     } catch (error) {
       dispatch({ type: AUTH_ERROR, payload: error.response.data.error });
-      // You can handle the error, such as displaying an error message to the user.
     }
   };
 
-// Login Action
 export const login =
   (email: string, password: string, router: any) => async (dispatch: Dispatch) => {
     try {
@@ -49,20 +45,16 @@ export const login =
       localStorage.setItem('token', res.data.token);
       dispatch({ type: LOGIN_SUCCESS });
       router.push(PATH_DASHBOARD.blog.root);
-      // You can perform additional actions after a successful login, such as storing the token in local storage or redirecting the user.
     } catch (error) {
       dispatch({ type: AUTH_ERROR, payload: error?.response?.data?.error });
-      // You can handle the error, such as displaying an error message to the user.
     }
   };
-// Logout Action
+
 export const logout = () => async (dispatch: Dispatch) => {
   try {
     await axios.post('/auth/logout');
     dispatch({ type: LOGOUT_SUCCESS });
-    // You can perform additional actions after a successful logout, such as clearing the user data from the state or redirecting the user to the login page.
   } catch (error) {
     dispatch({ type: AUTH_ERROR, payload: error.response.data.error });
-    // You can handle the error, such as displaying an error message to the user.
   }
 };

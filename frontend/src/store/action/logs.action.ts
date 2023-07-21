@@ -35,11 +35,10 @@ export const fetchDashboardTotalDurationAndLogCountRequest = () => ({
 });
 
 export const fetchDashboardTotalDurationAndLogCountSuccess = (
-  totalDuration: number,
-  logCount: number
+  payload: any
 ) => ({
   type: FETCH_DASHBOARD_TOTAL_DURATION_AND_LOG_COUNT_SUCCESS,
-  payload: { totalDuration, logCount },
+  payload,
 });
 
 export const fetchDashboardTotalDurationAndLogCountFailure = (error: string) => ({
@@ -178,11 +177,10 @@ export const fetchDashboardTotalDurationAndLogCount = () => async (dispatch: any
     const totalDurationAndLogCountResponse = await axiosInstance.get(
       'logs/dashboard/total-duration-and-count'
     );
-
+console.log(totalDurationAndLogCountResponse.data, 'totalDurationAndLogCountResponse');
     dispatch(
       fetchDashboardTotalDurationAndLogCountSuccess(
-        totalDurationAndLogCountResponse.data.totalDuration,
-        totalDurationAndLogCountResponse.data.totalLogs
+        totalDurationAndLogCountResponse.data.result,
       )
     );
   } catch (error) {

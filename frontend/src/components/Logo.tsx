@@ -3,6 +3,8 @@ import NextLink from 'next/link';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
+import { RootState } from 'src/store/reducer';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -12,6 +14,7 @@ interface Props extends BoxProps {
 
 const Logo = forwardRef<any, Props>(({ disabledLink = false, sx }, ref) => {
   const theme = useTheme();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const PRIMARY_LIGHT = theme.palette.primary.light;
 
@@ -68,8 +71,7 @@ const Logo = forwardRef<any, Props>(({ disabledLink = false, sx }, ref) => {
   if (disabledLink) {
     return <>{logo}</>;
   }
-
-  return <NextLink href="/">{logo}</NextLink>;
+  return <NextLink href={user?.user ? '/dashboard/app' : '/'}>{logo}</NextLink>;
 });
 
 export default Logo;

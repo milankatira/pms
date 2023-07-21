@@ -33,7 +33,6 @@ export default function NavbarAccount({ isCollapse }: Props) {
   const { user } = useAuth();
 
   return (
-    <NextLink href={PATH_DASHBOARD.user.account} passHref>
       <Link underline="none" color="inherit">
         <RootStyle
           sx={{
@@ -66,6 +65,5 @@ export default function NavbarAccount({ isCollapse }: Props) {
           </Box>
         </RootStyle>
       </Link>
-    </NextLink>
   );
 }

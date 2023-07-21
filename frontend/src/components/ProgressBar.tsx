@@ -5,12 +5,20 @@ import { useRouter } from 'next/router';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from 'src/store/reducer';
+import { fetchMe } from 'src/store/action/auth.action';
 
 // ----------------------------------------------------------------------
 
 export default function ProgressBar() {
   const theme = useTheme();
   const router = useRouter();
+  const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
+  useEffect(() => {
+    dispatch(fetchMe(router));
+  }, []);
 
   NProgress.configure({ showSpinner: false });
 

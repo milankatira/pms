@@ -34,7 +34,7 @@ const IconStyle = styled(Iconify)(({ theme }) => ({
 interface Props extends CardProps {
   icon: string;
   title: string;
-  total: number;
+  total: number | string;
   chartData: number;
   color?: ColorSchema;
 }
@@ -50,8 +50,15 @@ export default function AppWidget({
   const theme = useTheme();
 
   const chartOptions = merge(BaseOptionChart(), {
+    chart: {
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      animations: { enabled: false },
+      sparkline: { enabled: true } ,
+      foreColor: theme.palette.text.disabled,
+      fontFamily: theme.typography.fontFamily,
+    },
     colors: [theme.palette[color].main],
-    chart: { sparkline: { enabled: true } },
     legend: { show: false },
     plotOptions: {
       radialBar: {
@@ -84,7 +91,7 @@ export default function AppWidget({
         height={86}
       />
       <Box sx={{ ml: 3, color: 'common.white' }}>
-        <Typography variant="h4"> {fNumber(total)}</Typography>
+        <Typography variant="h4"> {(total)}</Typography>
         <Typography variant="body2" sx={{ opacity: 0.72 }}>
           {title}
         </Typography>

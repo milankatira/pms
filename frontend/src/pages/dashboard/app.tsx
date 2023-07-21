@@ -26,11 +26,12 @@ import {
 // assets
 import { SeoIllustration } from '../../assets';
 import { useEffect } from 'react';
-import { fetchDashboardTotalDurationAndLogCount } from 'src/store/action/logs.action';
+import { fetchDashboardLogs, fetchDashboardTotalDurationAndLogCount } from 'src/store/action/logs.action';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { convertToHoursAndMinutes } from 'src/utils/formatMinutes';
+import { statusLogCounts } from 'src/utils/formatProject';
 
 // ----------------------------------------------------------------------
 
@@ -41,25 +42,29 @@ GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-  const { user } = useAuth();
 
   const theme = useTheme();
 
   const { themeStretch } = useSettings();
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { logCount, totalDuration } = useSelector((state: RootState) => state.logs);
-console.log(logCount, totalDuration, 'numberOfLogs,totalDuration');
+  const { logCount, totalDuration, logAnalysis, dashboardLogs } = useSelector(
+    (state: RootState) => state.logs
+  );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const projectData = dashboardLogs && statusLogCounts(dashboardLogs);
+  console.log(logCount, totalDuration, logAnalysis, 'numberOfLogs,totalDuration');
   useEffect(() => {
+    dispatch(fetchDashboardLogs());
     dispatch(fetchDashboardTotalDurationAndLogCount());
   }, []);
+
   return (
     <Page title="General: App">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={12}>
             <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
+              title={`Welcome back! \n ${user?.user?.email?.split('@')[0]}`}
               img={
                 <SeoIllustration
                   sx={{
@@ -69,12 +74,7 @@ console.log(logCount, totalDuration, 'numberOfLogs,totalDuration');
                   }}
                 />
               }
-              action={<Button variant="contained">Go Now</Button>}
             />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppFeatured list={_appFeatured} />
           </Grid>
 
           <Grid item xs={12} md={6}>
@@ -97,8 +97,6 @@ console.log(logCount, totalDuration, 'numberOfLogs,totalDuration');
             />
           </Grid>
 
-     
-
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentDownload
               title="Current Download"
@@ -109,70 +107,112 @@ console.log(logCount, totalDuration, 'numberOfLogs,totalDuration');
                 theme.palette.primary.dark,
               ]}
               chartData={[
-                { label: 'Mac', value: 12244 },
-                { label: 'Window', value: 53345 },
-                { label: 'iOS', value: 44313 },
-                { label: 'Android', value: 78343 },
+                {
+                  label: 'paid',
+                  value:
+                    logAnalysis?.find(
+                      (item: { status: { status: string } }) => item.status.status === 'paid'
+                    )?.totalLogs || 0,
+                },
+                {
+                  label: 'overdue',
+                  value:
+                    logAnalysis?.find(
+                      (item: { status: { status: string } }) => item.status.status === 'overdue'
+                    )?.totalLogs || 0,
+                },
+                {
+                  label: 'unpaid',
+                  value:
+                    logAnalysis?.find(
+                      (item: { status: { status: string } }) => item.status.status === 'unpaid'
+                    )?.totalLogs || 0,
+                },
+                {
+                  label: 'draft',
+                  value:
+                    logAnalysis?.find(
+                      (item: { status: { status: string } }) => item.status.status === 'draft'
+                    )?.totalLogs || 0,
+                },
               ]}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled
-              title="Area Installed"
-              subheader="(+43%) than last year"
-              chartLabels={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']}
-              chartData={[
-                {
-                  year: '2019',
-                  data: [
-                    { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                    { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
-                  ],
-                },
-                {
-                  year: '2020',
-                  data: [
-                    { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                    { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                  ],
-                },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice
-              title="New Invoice"
-              tableData={_appInvoices}
-              tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
-                { id: '' },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Related Applications" list={_appRelated} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopAuthors title="Top Authors" list={_appAuthors} />
+            {dashboardLogs && dashboardLogs.length >= 1 && (
+              <AppAreaInstalled
+                title="Project log"
+                chartLabels={
+                  dashboardLogs &&
+                  dashboardLogs.length >= 1 &&
+                  dashboardLogs?.map((i: { _id: Date }) => i._id)
+                }
+                chartData={[
+                  {
+                    year: '2019',
+                    data: [
+                      {
+                        name: 'paid',
+                        data:
+                          projectData &&
+                          projectData.length >= 1 &&
+                          projectData?.map((i: { statusCount: number[] }) => i?.statusCount[0]),
+                      },
+                      {
+                        name: 'unpaid',
+                        data:
+                          projectData &&
+                          projectData.length >= 1 &&
+                          projectData?.map((i: { statusCount: number[] }) => i?.statusCount[1]),
+                      },
+                      {
+                        name: 'overdue',
+                        data:
+                          projectData &&
+                          projectData.length >= 1 &&
+                          projectData?.map((i: { statusCount: number[] }) => i?.statusCount[2]),
+                      },
+                      {
+                        name: 'draft',
+                        data:
+                          projectData &&
+                          projectData.length >= 1 &&
+                          projectData?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
+                      },
+                    ],
+                  },
+                  {
+                    year: '2020',
+                    data: [
+                      { name: 'paid', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
+                      { name: 'unpaid', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
+                    ],
+                  },
+                ]}
+              />
+            )}
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <Stack spacing={3}>
-              <AppWidget title="Conversion" total={38566} icon={'eva:person-fill'} chartData={48} />
               <AppWidget
-                title="Applications"
-                total={55566}
+                title="Paid"
+                total={convertToHoursAndMinutes(
+                  logAnalysis?.find(
+                    (item: { status: { status: string } }) => item.status.status === 'paid'
+                  )?.totalDuration
+                )}
+                icon={'eva:person-fill'}
+                chartData={48}
+              />
+              <AppWidget
+                title="Overdue"
+                total={convertToHoursAndMinutes(
+                  logAnalysis?.find(
+                    (item: { status: { status: string } }) => item.status.status === 'overdue'
+                  )?.totalDuration
+                )}
                 icon={'eva:email-fill'}
                 color="warning"
                 chartData={75}

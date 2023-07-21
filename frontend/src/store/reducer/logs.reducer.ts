@@ -28,6 +28,7 @@ const initialState = {
   numberOfLogs: null,
   totalDuration: null,
   logCount: null,
+  logAnalysis:null,
 };
 
 const logReducer = (state = initialState, action: any) => {
@@ -94,8 +95,9 @@ const logReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
-        totalDuration: action.payload.totalDuration,
-        logCount: action.payload.logCount,
+        totalDuration: action.payload[0].totalDuration,
+        logCount: action.payload[0].totalLogs,
+        logAnalysis: action.payload.slice(1),
       };
 
     default:

@@ -135,6 +135,7 @@ export default function BlogPostRecent({ posts }: Props) {
           Change
         </Button>
         <Grid key={posts._id} item xs={12} sm={12} md={12}>
+          {/* @ts-ignore */}
           <BlogPostCard post={posts} />
         </Grid>
 
