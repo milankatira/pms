@@ -34,6 +34,7 @@ import { useSelector } from 'react-redux';
 import { fetchAllProjects, getProject } from 'src/store/action/products.action';
 import { useDispatch } from 'react-redux';
 import { getLog } from 'src/store/action/logs.action';
+import Loader from 'src/components/Loader/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +46,7 @@ BlogPost.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function BlogPost() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { log } = useSelector((state: RootState) => state.logs);
+  const { log, loading } = useSelector((state: RootState) => state.logs);
   useEffect(() => {
     dispatch(getLog(title as unknown as string));
 
@@ -75,6 +76,7 @@ export default function BlogPost() {
           ]}
         />
         {log && <BlogPostRecent posts={log.log} />}
+        {loading && <Loader />}
       </Container>
     </Page>
   );

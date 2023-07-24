@@ -1,37 +1,34 @@
 // @mui
+import { Container, Grid, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button } from '@mui/material';
 // hooks
-import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // layouts
 import Layout from '../../layouts';
 // _mock_
-import { _appFeatured, _appAuthors, _appInstalled, _appRelated, _appInvoices } from '../../_mock';
 // components
 import Page from '../../components/Page';
 // sections
 import {
-  AppWidget,
-  AppWelcome,
-  AppFeatured,
-  AppNewInvoice,
-  AppTopAuthors,
-  AppTopRelated,
   AppAreaInstalled,
-  AppWidgetSummary,
   AppCurrentDownload,
-  AppTopInstalledCountries,
+  AppWelcome,
+  AppWidget,
+  AppWidgetSummary,
 } from '../../sections/@dashboard/general/app';
 // assets
-import { SeoIllustration } from '../../assets';
 import { useEffect } from 'react';
-import { fetchDashboardLogs, fetchDashboardTotalDurationAndLogCount } from 'src/store/action/logs.action';
-import { ThunkDispatch } from 'redux-thunk';
-import { RootState } from 'src/store/reducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import Loader from 'src/components/Loader/Loader';
+import {
+  fetchDashboardLogs,
+  fetchDashboardTotalDurationAndLogCount,
+} from 'src/store/action/logs.action';
+import { RootState } from 'src/store/reducer';
 import { convertToHoursAndMinutes } from 'src/utils/formatMinutes';
 import { statusLogCounts } from 'src/utils/formatProject';
+import { SeoIllustration } from '../../assets';
 
 // ----------------------------------------------------------------------
 
@@ -42,12 +39,11 @@ GeneralApp.getLayout = function getLayout(page: React.ReactElement) {
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
-
   const theme = useTheme();
 
   const { themeStretch } = useSettings();
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { logCount, totalDuration, logAnalysis, dashboardLogs } = useSelector(
+  const { logCount, totalDuration, logAnalysis, dashboardLogs, loading } = useSelector(
     (state: RootState) => state.logs
   );
   const { user } = useSelector((state: RootState) => state.auth);
@@ -220,6 +216,7 @@ export default function GeneralApp() {
             </Stack>
           </Grid>
         </Grid>
+        {loading && <Loader />}
       </Container>
     </Page>
   );

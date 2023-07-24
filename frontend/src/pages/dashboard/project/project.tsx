@@ -22,6 +22,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
 import { AppAreaInstalled } from 'src/sections/@dashboard/general/app';
 import { statusCounts } from 'src/utils/formatProject';
+import Loader from 'src/components/Loader/Loader';
 
 BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
@@ -29,7 +30,7 @@ BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function BlogPosts() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { projects, dashboardData } = useSelector((state: RootState) => state.projects);
+  const { projects, dashboardData, loading } = useSelector((state: RootState) => state.projects);
 
   const { themeStretch } = useSettings();
 
@@ -127,10 +128,11 @@ export default function BlogPosts() {
                         project?.map((i: { statusCount: number[] }) => i?.statusCount[3]),
                     },
                   ],
-                }
+                },
               ]}
             />
           )}
+          {loading && <Loader />}
         </Grid>
       </Container>
     </Page>

@@ -22,6 +22,7 @@ import { RootState } from 'src/store/reducer';
 import { createProject, fetchAllProjects } from 'src/store/action/products.action';
 import { useSelector } from 'react-redux';
 import { createLog } from 'src/store/action/logs.action';
+import Loader from 'src/components/Loader/Loader';
 
 export type FormValuesProps = {
   name: string;
@@ -79,7 +80,6 @@ export default function BlogNewPostForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      console.log(data, 'data');
       dispatch(createLog(data));
       push(PATH_DASHBOARD.logs.posts);
     } catch (error) {
@@ -88,7 +88,9 @@ export default function BlogNewPostForm() {
   };
 
   const STATUS_OPTIONS = ['paid', 'unpaid', 'overdue', 'draft'];
-
+ const {  loading } = useSelector(
+   (state: RootState) => state.logs
+ );
   return (
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -207,6 +209,8 @@ export default function BlogNewPostForm() {
         onClose={handleClosePreview}
         onSubmit={handleSubmit(onSubmit)}
       />
+
+      {loading && <Loader />}
     </>
   );
 }

@@ -7,10 +7,13 @@ import useSettings from '../../../hooks/useSettings';
 // layouts
 import Layout from '../../../layouts';
 // components
-import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Page from '../../../components/Page';
 // sections
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store/reducer';
 import { BlogNewPostForm } from '../../../sections/@dashboard/blog';
+import Loader from 'src/components/Loader/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +25,7 @@ BlogNewPost.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function BlogNewPost() {
   const { themeStretch } = useSettings();
-
+  const { loading } = useSelector((state: RootState) => state.projects);
   return (
     <Page title="Blog: New Post">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -36,6 +39,7 @@ export default function BlogNewPost() {
         />
 
         <BlogNewPostForm />
+        {loading && <Loader />}
       </Container>
     </Page>
   );

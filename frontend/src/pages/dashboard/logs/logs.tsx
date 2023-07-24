@@ -3,25 +3,25 @@ import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 // @mui
 import {
-  Grid,
-  Button,
-  Container,
-  Card,
   Box,
-  Tabs,
-  Tab,
+  Button,
+  Card,
+  Container,
   Divider,
-  Stack,
-  Tooltip,
-  IconButton,
-  TableContainer,
-  TableBody,
-  Table,
-  TablePagination,
   FormControlLabel,
+  Grid,
+  IconButton,
+  Stack,
   Switch,
+  Tab,
+  Table,
+  TableBody,
+  TableContainer,
   TableFooter,
+  TablePagination,
   TableRow,
+  Tabs,
+  Tooltip,
   useTheme,
 } from '@mui/material';
 // hooks
@@ -31,23 +31,23 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // layouts
 import Layout from '../../../layouts';
 // components
-import Page from '../../../components/Page';
-import Iconify from '../../../components/Iconify';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
+import Iconify from '../../../components/Iconify';
+import Page from '../../../components/Page';
 // sections
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { RootState } from 'src/store/reducer';
-import { fetchDashboardLogs, fetchLogs } from 'src/store/action/logs.action';
-import { statusLogCounts } from 'src/utils/formatProject';
-import { AppAreaInstalled } from 'src/sections/@dashboard/general/app';
-import { useRouter } from 'next/router';
+import Label from 'src/components/Label';
+import Scrollbar from 'src/components/Scrollbar';
+import { TableNoData, TableSelectedActions } from 'src/components/table';
 import useTable, { getComparator } from 'src/hooks/useTable';
 import useTabs from 'src/hooks/useTabs';
-import Label from 'src/components/Label';
+import { AppAreaInstalled } from 'src/sections/@dashboard/general/app';
 import { InvoiceTableRow, InvoiceTableToolbar } from 'src/sections/@dashboard/invoice/list';
-import { TableNoData, TableSelectedActions } from 'src/components/table';
-import Scrollbar from 'src/components/Scrollbar';
+import { fetchDashboardLogs, fetchLogs } from 'src/store/action/logs.action';
+import { RootState } from 'src/store/reducer';
+import { statusLogCounts } from 'src/utils/formatProject';
 
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -56,6 +56,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { ExportToCsv } from 'export-to-csv';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import Loader from 'src/components/Loader/Loader';
 BlogPosts.getLayout = function getLayout(page: React.ReactElement) {
   return <Layout>{page}</Layout>;
 };
@@ -88,7 +89,9 @@ const handleDownloadPDF = (data: any) => {
   const columns = Object.keys(data[0]);
 
   // Set up the table rows
-  const rows = data.map((item: { [s: string]: unknown; } | ArrayLike<unknown>) => Object.values(item));
+  const rows = data.map((item: { [s: string]: unknown } | ArrayLike<unknown>) =>
+    Object.values(item)
+  );
 
   // Add the table to the PDF document
   // @ts-ignore
@@ -103,7 +106,9 @@ const handleDownloadPDF = (data: any) => {
 
 export default function BlogPosts() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { logs, dashboardLogs, numberOfLogs } = useSelector((state: RootState) => state.logs);
+  const { logs, dashboardLogs, numberOfLogs, loading } = useSelector(
+    (state: RootState) => state.logs
+  );
   const projectData = dashboardLogs && statusLogCounts(dashboardLogs);
   const { themeStretch } = useSettings();
   useEffect(() => {
@@ -493,6 +498,7 @@ export default function BlogPosts() {
             />
           )}
         </Grid>
+        {loading && <Loader />}
       </Container>
     </Page>
   );

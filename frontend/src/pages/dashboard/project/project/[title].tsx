@@ -19,6 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'src/store/reducer';
 import { useSelector, useDispatch } from 'react-redux';
 import { getProject } from 'src/store/action/products.action';
+import Loader from 'src/components/Loader/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ BlogPost.getLayout = function getLayout(page: React.ReactElement) {
 
 export default function BlogPost() {
   const dispatch: ThunkDispatch<RootState, undefined, any> = useDispatch();
-  const { project } = useSelector((state: RootState) => state.projects);
+  const { project, loading } = useSelector((state: RootState) => state.projects);
   useEffect(() => {
     dispatch(getProject(title as unknown as string));
     return () => {
@@ -56,6 +57,7 @@ export default function BlogPost() {
           ]}
         />
         {project && <BlogPostRecent posts={project} />}
+        {loading && <Loader />}
       </Container>
     </Page>
   );
